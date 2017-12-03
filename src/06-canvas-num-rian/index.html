@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>canvas数字雨</title>
+    <link rel="stylesheet" href="css/common.css">
+    <style type="text/css">
+        
+        html,body{
+            overflow: hidden;
+        }
+        
+        #canv{
+            display: block;
+            margin: 0 auto;
+            background: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="canv">
+        您的浏览器不支持canvas,请更换浏览器查看效果！
+    </canvas>
+
+    <script type="text/javascript">
+
+        var canv = document.getElementById("canv"),
+            cxt = canv.getContext("2d"),
+            fontSize = 16;
+
+        canv.width = window.screen.width;
+        canv.height = window.screen.height;
+
+        var strY = [],//每一列的行
+            cols = canv.width/fontSize;//有多少列
+
+        for(var i=0; i<cols; i++){strY[i] = 0;}
+
+        (function draw() {
+            //绘制透明背景
+            cxt.fillStyle = "rgba(0,0,0,.1)";
+            cxt.fillRect(0,0,canv.width,canv.height);
+            //绘制数字
+            cxt.fillStyle = "#3eab2d";
+            cxt.font = "bold "+fontSize+"px Microsoft yahei";
+
+            for (var i=0; i<cols; i++){
+                var num = Math.floor(Math.random()*10)+"",
+                    textX = i*fontSize,
+                    textY = strY[i];
+                cxt.fillText(num,textX,textY);
+                strY[i] += fontSize;
+                //从头开始，并且让一部分不回去
+                if (strY[i] >= canv.height && Math.random() >= 0.85){
+                    strY[i] = 0;
+                }
+
+            }
+            window.requestAnimationFrame(draw);//递归调用
+        })();
+
+    </script>
+
+</body>
+</html>

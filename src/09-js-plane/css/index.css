@@ -1,0 +1,134 @@
+@charset "utf-8";
+
+body{
+	background: #0384C3 url(../images/timg.jpg) repeat;
+}
+
+#wrap{
+	width: 320px;
+	height: 520px;
+	border: 10px solid transparent;
+	border-image: url(../images/borderimg.jpg) 10 10 round;
+	margin: 200px auto 0;
+}
+
+#wrap .box{
+	position: relative;
+	overflow: hidden;
+	width: 100%;
+	height: 100%;
+	/*background: #131313;*/
+	/*background: url(../images/timgbg.jpg) repeat;
+	background-position-x: 100%;
+	background-position-y: 100%;
+	background-size: 200% 200%;*/
+	text-align: center;
+}
+
+#wrap .box h1{
+	font-size: 2rem;
+	padding-top: 40px;
+	color: #fff;
+}
+
+#wrap .box .diffc{
+	width: 150px;
+	height: 30px;
+	line-height: 30px;
+	font-size: 14px;
+	color: #fff;
+	background: #fff url(../images/borderimg.jpg) no-repeat;
+	margin: 55px auto;
+	cursor: pointer;
+	transition: .2s;
+	text-shadow: 1px 1px 2px #000000;
+	
+}
+
+#wrap .box .diffc:hover{
+	background: #A9A9A9;
+	color: #fff;
+}
+
+#wrap .box .bt{
+	background: indianred;
+	color: #fff;
+}
+
+#wrap .box .bt:hover{
+	color: #000;
+	background: indianred;
+}
+#wrap .score{
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	width: 100%;
+	height: 20px;
+	line-height: 20px;
+	font-size: 14px;
+	font-weight: bold;
+	color: #fff;
+	z-index: 999;
+	text-align: left;
+	padding-left: 25px;
+	background: url(../images/enemy2.png) no-repeat;
+}
+
+
+#wrap .myPlane,
+#wrap .bullet,
+#wrap .enePlane,
+#wrap .PlaneBoom{
+	position: absolute;
+	cursor: move;
+}
+
+#wrap .overBg{
+	position: relative;
+	width: 240px;
+	height: 420px;
+	text-align: center;
+	background: #fff;
+	color: #000;
+	margin: 40px auto;
+}
+
+#wrap .overBg .title{
+	color: #000;
+	padding-bottom: 30px;
+}
+
+#wrap .overBg .totalScroe{
+	line-height: 25px;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+#wrap .overBg .sCore{
+	font-size: 14px;
+	font-weight: bold;
+	color: #FF4500;
+	padding: 0 5px;
+}
+
+#wrap .overBg .restrat{
+	position: absolute;
+	bottom: 10%;
+	left: 50%;
+	margin-left: -60px;
+	width: 120px;
+	height: 40px;
+	line-height: 40px;
+	font-size: 12px;
+	font-weight: bold;
+	text-align: center;
+	color: #fff;
+	background: #000;
+	cursor: pointer;
+	transition: all .2s;
+}
+
+#wrap .overBg .restrat:hover{
+	background: #222;
+}

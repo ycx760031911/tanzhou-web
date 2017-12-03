@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>京东轮播图-原生js</title>
+		<link rel="stylesheet" type="text/css" href="css/common.css"/>
+		<link rel="stylesheet" type="text/css" href="css/index.css"/>
+	</head>
+	<body>
+		
+		<div id="wrap">
+			
+			<div class="banner">
+
+			</div>
+			<div class="dot">
+
+			</div>
+			
+			<div class="button">
+				<a href="javascript:;" class="btn btn-l"><</a>
+				<a href="javascript:;" class="btn btn-r">></a>
+			</div>
+				
+			
+		</div>
+
+	
+	<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+	<script src="js/bannerJson.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/banner.js" type="text/javascript" charset="utf-8"></script>
+	
+	<script type="text/javascript">
+
+		//数据绑定
+		(function bindDate(){
+			var str = "",oUl = "",oA = "";
+			for(var key in banImgJson){
+				str += "<li><a href='javascript:;'><img src='"+banImgJson[key].src+"'></a></li>";
+				oA += "<a href='javascript:;'></a>";
+			}
+			oUl = "<ul class='banList'>"+str+"</ul>";
+			//将遍历好字符串放入盒子中
+			$("#wrap").find(".banner").html(oUl);
+			$("#wrap").find(".dot").html(oA);
+			//清空一些无用的值
+			oUl = null; str = null; oA = null;
+
+
+		})();
+		
+
+	//淡入淡出
+	/*
+		$("#wrap").funBanner({
+			//type : "fade",
+			//seamless : true,//true代表无缝，false代表有缝
+			tabType : "mouseenter",
+			picE : ".banner ul li",
+			dotE : ".dot a",
+			btnE : ".button .btn",
+			time : 5000
+		});
+	*/
+	
+	//有缝
+	/*
+		$("#wrap").funBanner({
+			type : "LRslide",
+			seamless : false,//true代表无缝，false代表有缝
+			tabType : "click",
+			picE : ".banner ul li",
+			dotE : ".dot a",
+			btnE : ".button .btn",
+			time : 5000
+		});
+	*/
+	
+	//无缝
+	
+		$("#wrap").funBanner({
+			type : "LRslide",
+			seamless : true,//true代表无缝，false代表有缝
+			tabType : "click",
+			picE : ".banner ul li",
+			dotE : ".dot a",
+			btnE : ".button .btn",
+			time : 5000
+		});
+	
+		
+	</script>
+	
+	</body>
+</html>

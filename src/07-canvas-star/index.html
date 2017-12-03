@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>canvas数字雨</title>
+    <link rel="stylesheet" href="css/common.css">
+    <style type="text/css">
+
+        html,body{
+            overflow: hidden;
+        }
+
+        #canv{
+            display: block;
+            margin: 0 auto;
+            background: #000;
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="canv">
+    您的浏览器不支持canvas,请更换浏览器查看效果！
+</canvas>
+
+<script type="text/javascript">
+
+    var canv = document.getElementById("canv"),
+        cxt = canv.getContext("2d"),
+        num = 200,
+        data = [];
+
+    var maxX = canv.width = window.screen.width;
+    var maxY = canv.height = window.screen.height;
+    var move = [];
+
+    //存储随机值
+    for(var i=0; i<num; i++){
+        data[i] = {x:Math.random()*maxX , y:Math.random()*maxY , cx:Math.random()*1-0.5 , cy:Math.random()*1-0.5};
+        cra(data[i].x , data[i].y);
+    }
+
+    document.onmousemove = function (e) {
+        e = e || window.event;
+        move.x = e.clientX;
+        move.y = e.clientY;
+    }
+
+    //运动
+    !function draw() {
+        cxt.clearRect(0,0,maxX,maxY);
+        for (var i=0; i<num; i++){
+            data[i].x += data[i].cx;
+            data[i].y += data[i].cy;
+
+            if (data[i].x > maxX || data[i].x < 0 ){data[i].cx = -data[i].cx; }
+            if (data[i].y > maxY || data[i].y < 0 ){data[i].cy = -data[i].cy; }
+
+            cra(data[i].x , data[i].y);
+
+            //连线
+            for (var j=0; j<num; j++){
+                if (Math.pow((data[i].x - data[j].x),2) + Math.pow((data[i].y-data[j].y),2) <= 40*40){
+                    lineTo(data[i].x , data[i].y , data[j].x, data[j].y , false);
+                }
+            };
+            if (move.x){
+                if (Math.pow((data[i].x - move.x),2) + Math.pow((data[i].y-move.y),2) <= 100*100){
+                    lineTo(data[i].x , data[i].y , move.x , move.y , true);
+                }
+            }
+        }
+        window.requestAnimationFrame(draw);
+    }();
+
+    //画线
+    function lineTo(x1,y1,x2,y2,isMove) {
+        cxt.save();
+        var liner = cxt.createLinearGradient(x1,y1,x2,y2);
+        if(isMove){
+            liner.addColorStop(0,"#77dd5a");
+            liner.addColorStop(1,"#ddb21f");
+        }else{
+            liner.addColorStop(0,"#4b3ddd");
+            liner.addColorStop(1,"#dd3b48");
+        }
+        cxt.strokeStyle = liner;
+        cxt.beginPath();
+        cxt.moveTo(x1,y1);
+        cxt.lineTo(x2,y2);
+        cxt.stroke();
+        cxt.restore();
+    };
+
+    //画圆
+    function cra(x,y) {
+        cxt.save();
+        cxt.fillStyle = "#fff";
+        cxt.beginPath();
+        cxt.arc(x,y,1,0,2*Math.PI,true);
+        cxt.closePath();
+        cxt.fill();
+        cxt.restore();
+    }
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>画板</title>
+    <link rel="stylesheet" href="css/common.css">
+    <style type="text/css">
+
+        body{
+            background: #ebebeb;
+        }
+        
+        #wrap{
+            display: block;
+            background: #fff;
+            margin: 50px auto;
+            border:1px solid #444;
+        }
+
+        #tool{
+            position: absolute;
+            top:50px;
+            left:50%;
+            margin-left: -402px;
+            width:100px;
+            /*height: 400px;*/
+            /*background: #b9b9b9;*/
+            color: #000;
+        }
+
+        #tool ul li{
+            width: 100%;
+            height: 30px;
+            line-height: 30px;
+            font-size: 14px;
+            text-align: left;
+            color: #000;
+            margin-bottom: 2px;
+            background: #fff;
+            text-indent: 5px;
+            cursor: pointer;
+            transition: all .2s;
+            user-select: none;
+        }
+
+        #tool ul li.on{
+            color: #fff;
+            background: #5c5bff;
+        }
+
+        #tool ul li:hover{
+            text-indent: 8px;
+            background: #e2dcdb;
+        }
+
+        .oXpc{
+            position: fixed;
+            background: #000;
+            background: rgba(0,0,0,.6);
+            transform: translate(-50%,-50%);
+            border-radius: 50%;
+        }
+
+        #info{
+            position: absolute;
+            top:20px;
+            left:50%;
+            margin-left: -25%;
+            width: 50%;
+            font-size: 14px;
+            text-align: center;
+            height: 30px;
+            line-height:30px;
+            user-select: none;
+        }
+
+        #arc{
+            display: none;
+            position: absolute;
+            left:50%;
+            top:51px;
+            margin-left: -300px;
+            width: 600px;
+            height:600px;
+        }
+    </style>
+
+</head>
+<body>
+
+    <canvas id="wrap" width="600" height="600"></canvas>
+    <div id="tool">
+        <ul>
+            <li>清空画布</li>
+            <li>橡皮擦</li>
+            <li>圆形</li>
+            <li>画笔</li>
+        </ul>
+    </div>
+    <div id="info">画画板</div>
+    <div id="arc"></div>
+
+    <script type="text/javascript">
+
+        var oWrap = document.getElementById("wrap"),
+            oInfo = document.getElementById("info"),
+            Arcwrap = document.getElementById("arc"),
+            oUl = document.getElementById("tool").children[0],
+            oLi = oUl.children,
+            oDel = oUl.children[0],
+            oXpc = oUl.children[1],
+            oArc = oUl.children[2],
+            oPen = oUl.children[3],
+            cxt = oWrap.getContext("2d"),
+            length = oUl.children.length;
+
+        var infoData = {
+            strat : "画画板",
+            oPen : "画笔工具",
+            oXpc : "橡皮擦工具，按Esc返回画笔工具",
+            Esc : "画笔工具",
+            oArc : "圆形工具"
+        }
+
+        oInfo.innerHTML = "画画板";
+        //画笔
+        oPen.onclick = function () {
+            clearClass();
+            this.className = "on";
+            oInfo.innerHTML = infoData.oPen;
+            Arcwrap.style.display = "none";
+            oWrap.onmousedown = function (e) {
+                e = e || window.event;
+                var x = e.pageX - this.offsetLeft,
+                    y = e.pageY - this.offsetTop,
+                    This = this;
+
+                cxt.strokeStyle = "#000";
+                cxt.beginPath();
+                cxt.moveTo(x,y);
+
+                document.onmousemove = function (e) {
+                    e = e || window.event;
+                    var x = e.pageX - This.offsetLeft,
+                        y = e.pageY - This.offsetTop;
+                    cxt.lineTo(x,y);
+                    cxt.stroke();
+                }
+
+                document.onmouseup = function (e) {
+                    e = e || window.event;
+                    this.onmousemove = null;
+                    this.onmouseup = null;
+                }
+
+            };
+        }
+
+        //清空画布
+        oDel.onclick = function () {
+            cxt.clearRect(0,0,oWrap.width,oWrap.height);
+        }
+        
+        //橡皮擦
+        oXpc.onclick = function (e) {
+            clearClass();
+            this.className = "on";
+            oInfo.innerHTML = infoData.oXpc;
+            Arcwrap.style.display = "none";
+            e = e || window.event;
+            var oDiv = document.createElement("div");
+            oDiv.className = "oXpc";
+            oDiv.style.width = "30px";
+            oDiv.style.height = "30px";
+            oDiv.style.left = e.clientX + "px";
+            oDiv.style.top = e.clientY + "px";
+            document.body.appendChild(oDiv);
+
+            document.onmousemove = function (e) {
+                e = e || window.event;
+                oDiv.style.left = e.clientX + "px";
+                oDiv.style.top = e.clientY + "px";
+            }
+
+            oDiv.onmousedown = function (e) {
+                this.onmousemove = function (e) {
+                    e = e || window.event;
+                    var x = e.pageX - oWrap.offsetLeft - 15,
+                        y = e.pageY - oWrap.offsetTop - 15;
+                    cxt.clearRect(x,y,30,30);
+                }
+                document.onmouseup = function () {
+                    oDiv.onmousemove = null;
+                    this.onmouseup = null;
+                }
+            };
+            //esc取消橡皮差工具
+            document.onkeydown = function (e) {
+                clearClass();
+                oLi[3].className = "on";
+                oInfo.innerHTML = infoData.Esc;
+                Arcwrap.style.display = "none";
+                if (e.keyCode == 27){
+                    this.body.removeChild(oDiv);
+                    this.onkeydown = null;
+                }
+            };
+        }
+
+        //圆
+        oArc.onclick = function () {
+            clearClass();
+            this.className = "on";
+            oInfo.innerHTML = infoData.oArc;
+            Arcwrap.style.display = "block";
+            Arcwrap.innerHTML = '';
+        }
+        Arcwrap.onmousedown = function (e) {
+            var xStr = e.pageX - oWrap.offsetLeft,
+                yStr = e.pageY - oWrap.offsetTop,
+                oDiv1 = document.createElement("div"),
+                r = null;
+
+            cxt.strokeStyle = "#000";
+            cxt.beginPath();
+
+            document.onmousemove = function (e) {
+                var xNow = e.pageX - oWrap.offsetLeft,
+                    yNow = e.pageY - oWrap.offsetTop;
+                oDiv1.style.cssText += "position:absolute; left:"+xStr+"px; top:"+yStr+"px; border:1px solid #000; border-radius:100%;";
+                r = Math.max((xNow - xStr),(yNow - yStr));
+                oDiv1.style.width = r + "px";
+                oDiv1.style.height = r + "px";
+                Arcwrap.appendChild(oDiv1);
+            };
+
+            document.onmouseup = function () {
+                this.onmousemove = null;
+                var rX = oDiv1.offsetLeft + r/2,
+                    rY = oDiv1.offsetTop + r/2;
+                r = r/2;
+                cxt.arc(rX,rY,r,0,2*Math.PI,true);
+                cxt.closePath();
+                cxt.stroke();
+                Arcwrap.style.display = "none";
+                this.onmouseup = null;
+                clearClass();
+                oLi[3].className = "on";
+                oInfo.innerHTML = infoData.Esc;
+            }
+
+        }
+
+        //圆结束
+
+        //清除class
+        function clearClass() {
+            for (var i = 0; i <length; i++){
+                oLi[i].className = "";
+            }
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>苹果相册</title>
+    <link rel="stylesheet" href="css/common.css">
+    <style type="text/css">
+
+        html,body{
+            height: 100%;
+            width:100%;
+            background: #000;
+            perspective: 800px;
+            overflow: hidden;
+        }
+
+        #wrap{
+            width:100%;
+            height:200px;
+            position: relative;
+            top:50%;
+            left:0;
+            transform-style: preserve-3d;
+            -webkit-transform: translateY(-50%);
+            -moz-transform: translateY(-50%);
+            -ms-transform: translateY(-50%);
+            -o-transform: translateY(-50%);
+            transform: translateY(-50%);
+        }
+        #wrap ul li{
+            overflow: hidden;
+            position: absolute;
+            left: 0;
+            top:0;
+            width: 300px;
+            height:200px;
+            border-radius: 3px;
+        }
+
+        #wrap ul li.left{
+            transform: rotateY(45deg) translateZ(-100px);
+        }
+
+        #wrap ul li.mian{
+            transform: translateZ(40px);
+        }
+
+        #wrap ul li.right{
+            transform: rotateY(-45deg) translateZ(-100px);
+        }
+
+
+        #wrap ul li img{
+            display: block;
+            /*width: 100%;*/
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="wrap">
+
+        <ul id="imgList">
+            <!--<li class="left"><img src="img/1.jpg" alt=""></li>-->
+            <!--<li class="left"><img src="img/2.jpg" alt=""></li>-->
+            <!--<li class="mian"><img src="img/3.jpg" alt=""></li>-->
+            <!--<li class="right"><img src="img/4.jpg" alt=""></li>-->
+            <!--<li class="right"><img src="img/5.jpg" alt=""></li>-->
+        </ul>
+
+    </div>
+
+<script type="text/javascript">
+
+    init(9);
+
+    function init(num) {
+
+        var imgList = document.getElementById("imgList"),
+            mianIndex = Math.floor(num/2),
+            length = num;
+
+        for (var i=0; i<num; i++){
+            var oli = document.createElement("li");
+            oli.innerHTML = "<img src='img/"+(i+1)+".jpg'>";
+            oli.index = i;
+            //绑定class
+            oli.className = i < mianIndex?"left":"right";
+            if (i<mianIndex){
+                oli.className = "left";
+            }else if(i == mianIndex){
+                oli.className = "mian";
+            }else {
+                oli.className = "right";
+            }
+            imgList.appendChild(oli);
+        }
+        var oLi = imgList.children,
+            imgLeft = document.body.offsetWidth/2 - 150;//这是中间的值
+        
+        window.onresize = function () {
+            imgLeft = document.body.offsetWidth/2 - 150;
+            for (var i=0; i<length; i++){
+                oLi[i].style.left = imgLeft + ( i - mianIndex)*100 + "px";
+            }
+        }
+        
+        for (var i=0; i<length; i++){
+//            oLi[i].index = i;
+            oLi[i].style.left = imgLeft + ( i - mianIndex)*100 + "px";
+
+            (function (i) {
+                setTimeout(function () {
+                    oLi[i].style.transition = "1s";
+                },100)
+            })(i)
+
+            oLi[i].onclick = function (i) {
+
+                for (var i=0; i<length; i++){
+                    var x = this.index - mianIndex;
+                    oLi[i].style.left = oLi[i].offsetLeft - x*100 + "px";
+                    oLi[i].className = i < this.index?"left":"right";
+                }
+                this.className = "mian";
+                mianIndex = this.index;
+
+            }
+        }
+    };
+
+</script>
+</body>
+</html>
